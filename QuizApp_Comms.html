@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+    <title>CommCraft · Communication Quiz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Lexend', 'Segoe UI', Roboto, system-ui, sans-serif;
+            background: linear-gradient(145deg, #CFD6DB 0%, #e8e0d8 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+        .quiz-container {
+            max-width: 820px;
+            width: 100%;
+            background: #F0F9CCdd;
+            backdrop-filter: blur(4px);
+            border-radius: 3rem;
+            padding: 2rem 2rem 1.8rem;
+            box-shadow: 0 20px 48px rgba(0, 0, 0, 0.15), 0 4px 12px rgba(0, 0, 0, 0.05);
+            border: 2px solid #D2EC66;
+            transition: all 0.2s;
+        }
+        .quiz-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.5rem 1rem;
+            margin-bottom: 1.8rem;
+        }
+        .quiz-header h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            font-family: 'Lexend', sans-serif;
+            background: linear-gradient(135deg, #2d3b5e, #4a6fa5);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .quiz-header h1 small {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #5b6e8f;
+            background: none;
+            -webkit-background-clip: unset;
+            background-clip: unset;
+            color: #4a5f7a;
+        }
+        .score-box {
+            background: #2d3b5e;
+            color: white;
+            padding: 0.4rem 1.2rem;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            font-family: 'Lexend', sans-serif;
+            box-shadow: 0 4px 8px rgba(45, 59, 94, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .score-box span {
+            background: #ffffff30;
+            padding: 0.1rem 0.7rem;
+            border-radius: 30px;
+            font-size: 1.1rem;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #CFD6DB;
+            border-radius: 10px;
+            margin-bottom: 1.8rem;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #D2EC66, #b0d94a);
+            border-radius: 10px;
+            transition: width 0.4s ease;
+        }
+        .question-area {
+            min-height: 240px;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+        .question-text {
+            font-size: 1.4rem;
+            font-weight: 600;
+            font-family: 'Lexend', sans-serif;
+            color: #1e2a3e;
+            line-height: 1.4;
+            padding: 0.2rem 0.2rem 0.2rem 0;
+        }
+        .question-text .q-number {
+            display: inline-block;
+            background: #D2EC66;
+            color: #1e2a3e;
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 0.1rem 0.8rem;
+            border-radius: 40px;
+            margin-right: 0.6rem;
+        }
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.7rem;
+        }
+        @media (max-width: 600px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .option-btn {
+            background: #ffffff;
+            border: 2px solid #CFD6DB;
+            border-radius: 1.5rem;
+            padding: 0.9rem 1.2rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            font-family: 'Lexend', sans-serif;
+            color: #1e2a3e;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+            line-height: 1.3;
+        }
+        .option-btn:hover:not(.disabled) {
+            background: #F0F9CC;
+            border-color: #D2EC66;
+            transform: scale(1.01);
+        }
+        .option-btn .letter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #CFD6DB;
+            color: #1e2a3e;
+            width: 28px;
+            height: 28px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+        .option-btn.correct {
+            background: #D2EC66;
+            border-color: #28a745;
+            box-shadow: 0 0 0 3px #28a74530;
+        }
+        .option-btn.correct .letter {
+            background: #28a745;
+            color: white;
+        }
+        .option-btn.wrong {
+            background: #f8d7da;
+            border-color: #dc3545;
+            box-shadow: 0 0 0 3px #dc354530;
+        }
+        .option-btn.wrong .letter {
+            background: #dc3545;
+            color: white;
+        }
+        .option-btn.disabled {
+            cursor: default;
+            opacity: 0.7;
+        }
+        .option-btn.disabled:hover {
+            transform: none;
+        }
+        .feedback-box {
+            margin-top: 0.8rem;
+            padding: 0.8rem 1.2rem;
+            border-radius: 1.5rem;
+            background: #ffffff;
+            border-left: 6px solid #D2EC66;
+            font-size: 0.95rem;
+            font-family: 'Lexend', sans-serif;
+            color: #1e2a3e;
+            min-height: 3.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            flex-wrap: wrap;
+        }
+        .feedback-box .emoji-big {
+            font-size: 1.8rem;
+            line-height: 1;
+        }
+        .feedback-box .tip {
+            font-size: 0.85rem;
+            color: #3d4f6b;
+            background: #F0F9CC;
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+            font-weight: 500;
+        }
+        .action-row {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 1.4rem;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+        .btn {
+            border: none;
+            padding: 0.7rem 1.8rem;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            font-family: 'Lexend', sans-serif;
+            cursor: pointer;
+            transition: 0.15s;
+            background: #CFD6DB;
+            color: #1e2a3e;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .btn-primary {
+            background: #2d3b5e;
+            color: white;
+            box-shadow: 0 4px 8px rgba(45, 59, 94, 0.2);
+        }
+        .btn-primary:hover {
+            background: #1e2a4a;
+            transform: scale(0.98);
+        }
+        .btn-secondary {
+            background: #D2EC66;
+            color: #1e2a3e;
+        }
+        .btn-secondary:hover {
+            background: #c0e04a;
+        }
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        .btn-success:hover {
+            background: #1e8a37;
+        }
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        .result-screen {
+            text-align: center;
+            padding: 1.2rem 0.5rem;
+        }
+        .result-screen .big-emoji {
+            font-size: 4.2rem;
+            line-height: 1.2;
+        }
+        .result-screen h2 {
+            font-size: 2.2rem;
+            margin: 0.5rem 0;
+            font-family: 'Lexend', sans-serif;
+            color: #1e2a3e;
+        }
+        .result-screen .sub-text {
+            font-size: 1.1rem;
+            font-family: 'Lexend', sans-serif;
+            color: #4a5f7a;
+            max-width: 480px;
+            margin: 0.6rem auto;
+        }
+        .result-screen .badge-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.8rem;
+            margin: 1.4rem 0 0.6rem;
+        }
+        .badge-item {
+            background: #D2EC66;
+            padding: 0.3rem 1.2rem;
+            border-radius: 60px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            font-family: 'Lexend', sans-serif;
+            color: #2d3b5e;
+            border: 1px solid #b0d94a;
+        }
+        .badge-item strong {
+            font-weight: 700;
+        }
+        .hide {
+            display: none !important;
+        }
+        .fade-in {
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(6px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .quirky-tag {
+            font-size: 0.7rem;
+            background: #F0F9CC;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            color: #4a5f7a;
+            margin-left: 0.6rem;
+            font-weight: 400;
+        }
+        .shuffle-badge {
+            font-size: 0.6rem;
+            background: #2d3b5e30;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            color: #4a5f7a;
+            margin-left: 0.6rem;
+            font-weight: 400;
+        }
+        @media (max-width: 480px) {
+            .quiz-container { padding: 1.4rem 1rem; }
+            .question-text { font-size: 1.1rem; }
+            .option-btn { font-size: 0.85rem; padding: 0.7rem 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container" id="app">
+        <!-- header -->
+        <div class="quiz-header">
+            <h1>🧠 CommCraft <small>· Communication + AI Quiz</small></h1>
+            <div class="score-box">🏆 Score <span id="scoreDisplay">0</span></div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+        <!-- main content -->
+        <div id="quizContent">
+            <!-- question area -->
+            <div class="question-area" id="questionArea">
+                <div class="question-text" id="questionText">
+                    <span class="q-number" id="qNumber">Q1</span>
+                    <span id="qText">Loading questions...</span>
+                    <span class="shuffle-badge">🔀 shuffled</span>
+                </div>
+                <div class="options-grid" id="optionsGrid"></div>
+                <div class="feedback-box" id="feedbackBox">
+                    <span class="emoji-big">💬</span>
+                    <span id="feedbackText">Pick an option to see feedback</span>
+                </div>
+            </div>
+            <!-- action row -->
+            <div class="action-row">
+                <button class="btn btn-secondary" id="resetBtn">🔄 Reset & Shuffle</button>
+                <button class="btn btn-primary" id="nextBtn" disabled>Next →</button>
+            </div>
+        </div>
+
+        <!-- result screen (hidden by default) -->
+        <div id="resultScreen" class="result-screen hide">
+            <div class="big-emoji">🎉</div>
+            <h2 id="resultTitle">You're a Comm Champion!</h2>
+            <div class="sub-text" id="resultSub">You really know your active listening from your feedback loops.</div>
+            <div class="badge-grid" id="badgeGrid"></div>
+            <div style="margin-top:1.6rem;">
+                <button class="btn btn-success" id="restartBtn">🔄 Play Again (Shuffled)</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // ---------- MASTER QUESTION BANK ----------
+            const MASTER_QUESTIONS = [{
+                question: "You're in a meeting, and a colleague is explaining a complex idea. You have a brilliant counterpoint, but they're not done yet. What's the move?",
+                options: [
+                    "Interrupt with your point — they'll appreciate your energy.",
+                    "Nod, wait until they finish, then paraphrase what they said before sharing your thought.",
+                    "Raise your hand and say 'I disagree' while they're mid-sentence.",
+                    "Start doodling — you'll remember your point later."
+                ],
+                correct: 1,
+                feedback: "🎯 Active listening! Waiting, nodding, and paraphrasing shows you value their perspective. That's the foundation of real understanding. (And your counterpoint will land better too.)",
+                tip: "Try: 'What I'm hearing is...' before your response."
+            }, {
+                question: "You need to email your team about a project deadline change. Which subject line is most effective?",
+                options: [
+                    "Deadline Shift",
+                    "Important Update About the Thing",
+                    "🚨 NEW DEADLINE: Project X now due Friday 5pm",
+                    "Hey team, pls see below"
+                ],
+                correct: 2,
+                feedback: "📨 Clarity wins! A specific, action-oriented subject line with a clear date and time gets attention and reduces confusion. No one wants to play 'guess the update.'",
+                tip: "Use [ACTION] or [URGENT] sparingly — but this one earned it."
+            }, {
+                question: "Your teammate from another culture seems hesitant to speak up in meetings. What's your best approach?",
+                options: [
+                    "Call them out publicly — 'What do YOU think?' — to force participation.",
+                    "Assume they don't have anything valuable to say.",
+                    "Privately ask for their input before the meeting, and invite them to share if they're comfortable.",
+                    "Ignore it — they'll speak when they're ready."
+                ],
+                correct: 2,
+                feedback: "🌍 Adaptability! Recognizing different communication styles and cultural norms is key. A private check-in builds trust and creates a safe space for contribution. That's inclusive leadership.",
+                tip: "Ask: 'Would you like me to bring up your point if it fits?'"
+            }, {
+                question: "You just received feedback that your presentation was 'too detailed.' What's your best response?",
+                options: [
+                    "Get defensive: 'Well, you asked for detail!'",
+                    "Ignore it — you know your stuff.",
+                    "Say 'Thanks, I hear you' and ask for one example of where to cut back.",
+                    "Ask who gave the feedback so you can avoid them."
+                ],
+                correct: 2,
+                feedback: "🔁 Feedback culture! A gracious 'thank you' followed by a specific, actionable question turns criticism into growth. You're not just hearing feedback — you're mining it for gold.",
+                tip: "Try: 'What's one section you'd trim first?'"
+            }, {
+                question: "You're explaining a new tool to a colleague who's not tech-savvy. They look lost. What do you do?",
+                options: [
+                    "Keep going — they'll catch up eventually.",
+                    "Slow down, check for understanding, and use a simple analogy.",
+                    "Hand them the manual and walk away.",
+                    "Switch to jargon to impress them."
+                ],
+                correct: 1,
+                feedback: "🧩 Clarity + empathy! Slowing down, checking in, and using relatable analogies bridges the gap. Communication isn't about what you say — it's about what the other person hears.",
+                tip: "Think of it like a toaster — you press a button, and something pops out."
+            }, {
+                question: "Which of these is the BEST example of constructive feedback?",
+                options: [
+                    "Your reports are always late. Get it together.",
+                    "I notice your last two reports came in after the deadline. Can we chat about what's blocking you?",
+                    "You're lazy — step it up.",
+                    "Everyone else submits on time. Why can't you?"
+                ],
+                correct: 1,
+                feedback: "🎯 Constructive feedback is specific, behavioral, and offers a path forward. It focuses on actions, not personality. That's how you build trust and improvement.",
+                tip: "Use: 'I noticed [behavior], can we explore [solution]?'"
+            }, {
+                question: "You're in a heated discussion, and emotions are rising. What's your first move?",
+                options: [
+                    "Match their intensity — louder wins, right?",
+                    "Take a pause, acknowledge the emotion ('I can see this matters'), then ask a clarifying question.",
+                    "Walk out — it's not worth it.",
+                    "Change the subject entirely."
+                ],
+                correct: 1,
+                feedback: "🧘 Active listening under pressure! Acknowledging emotion de-escalates tension and shows respect. A simple 'I see this matters to you' can defuse more than any counter-argument.",
+                tip: "Try: 'Help me understand your perspective on this part...'"
+            }, {
+                question: "You're about to send an important email. What's your final step before hitting send?",
+                options: [
+                    "Add emojis for flair.",
+                    "Read it aloud (or use text-to-speech) to catch awkward phrasing.",
+                    "BCC your manager just in case.",
+                    "Add a PS with a joke."
+                ],
+                correct: 1,
+                feedback: "✍️ Clarity in expression! Reading aloud (or using AI read-aloud) catches tone, flow, and confusing bits. It's the oldest trick in the book — and it works every time.",
+                tip: "Ask: 'Does this say what I mean? Is it kind? Is it clear?'"
+            },
+            // ---------- AI-FOCUSED QUESTIONS ----------
+            {
+                question: "You've asked ChatGPT to draft a professional email. The response sounds a bit robotic. What's your best move?",
+                options: [
+                    "Send it as-is — it's good enough.",
+                    "Rewrite it entirely without using the AI output.",
+                    "Edit it to add your personal voice, tone, and specific context.",
+                    "Ask ChatGPT to make it 'more human' and send whatever it gives you."
+                ],
+                correct: 2,
+                feedback: "🤖 AI + Human = Magic! AI drafts are a starting point, not the final word. Adding your personal voice, context, and authentic tone transforms a generic draft into genuine communication.",
+                tip: "Use AI for structure, then infuse it with your personality and specific examples."
+            }, {
+                question: "You're using Otter.ai to transcribe a team meeting. What's a smart communication strategy after the meeting?",
+                options: [
+                    "Share the raw transcript with everyone and move on.",
+                    "Ignore the transcript — you were there.",
+                    "Review the transcript, extract key action items, and send a concise summary with next steps.",
+                    "Delete the transcript to save storage space."
+                ],
+                correct: 2,
+                feedback: "📝 Active listening + AI = Superpower! A raw transcript is data — but extracting insights and action items turns it into value. Your team will thank you for the clarity.",
+                tip: "Create a 'Key Takeaways & Action Items' doc after every important meeting."
+            }, {
+                question: "Grammarly suggests changing your sentence from passive to active voice. What should you consider?",
+                options: [
+                    "Always accept Grammarly's suggestions — it's AI, so it knows best.",
+                    "Always reject them — passive voice is more professional.",
+                    "Consider the context: active voice is usually clearer, but passive voice can be useful when the action is more important than the doer.",
+                    "Ignore all grammar suggestions and write how you speak."
+                ],
+                correct: 2,
+                feedback: "🎯 Clarity in expression! Active voice is generally stronger and clearer, but passive voice has its place (e.g., 'The project was completed' vs. 'We completed the project' when the team isn't the focus). Use AI as a guide, not a dictator.",
+                tip: "Ask: 'Does this sentence sound clear and natural?' before accepting any suggestion."
+            }, {
+                question: "You're preparing for a difficult conversation. How can AI help you practice?",
+                options: [
+                    "Ask ChatGPT to simulate the conversation and play both roles.",
+                    "Use AI to write a script and memorize it word-for-word.",
+                    "Avoid AI — real conversations can't be practiced.",
+                    "Ask AI to write a list of potential phrases, then pick the ones that feel right."
+                ],
+                correct: 3,
+                feedback: "🗣️ AI as a rehearsal partner! While AI can simulate conversations, the real value is in brainstorming phrases and approaches that feel authentic to you. Practice with a human if possible, but AI can help you prepare.",
+                tip: "Ask AI: 'What are 5 ways to phrase [difficult topic] constructively?' then choose what feels right."
+            }, {
+                question: "Your manager asks for a summary of a long document. You use AI to help. What's the ethical and effective approach?",
+                options: [
+                    "Copy-paste the AI summary and present it as your own work.",
+                    "Use the AI summary as a starting point, then add your own insights and verify accuracy.",
+                    "Tell your manager to just read the document themselves.",
+                    "Send the AI summary without reading it — trust the AI."
+                ],
+                correct: 1,
+                feedback: "🤝 AI + Integrity = Trust! AI tools are powerful assistants, not replacements for your judgment. Always verify AI-generated content, add your unique insights, and be transparent about using AI as a tool.",
+                tip: "If you use AI, think of it as a research assistant — you're still the expert who verifies and adds value."
+            }, {
+                question: "You receive an AI-generated translation of an important message. What's your best practice?",
+                options: [
+                    "Send it immediately — translations are accurate enough.",
+                    "Ignore the translation and write your own from scratch.",
+                    "Review the translation for cultural nuances, tone, and accuracy before sending.",
+                    "Send both the original and translation to be safe."
+                ],
+                correct: 2,
+                feedback: "🌍 Adaptability + Cultural Intelligence! AI translations are helpful, but cultural context and tone can be tricky. Always review for nuance, especially in professional or sensitive communications.",
+                tip: "Ask a native speaker to review important translations when possible."
+            }, {
+                question: "You're using AI to generate ideas for a team brainstorming session. What's your best approach?",
+                options: [
+                    "Present the AI-generated ideas as your own to impress the team.",
+                    "Use AI to generate a list, then facilitate a session where the team builds on, refines, and selects ideas.",
+                    "Skip the session — just send the AI ideas and let everyone choose.",
+                    "Share the raw AI output and ask the team to sort it out."
+                ],
+                correct: 1,
+                feedback: "💡 AI as a creativity catalyst! AI can kickstart brainstorming, but the real value comes from human collaboration — building on ideas, combining perspectives, and refining together. That's where innovation happens.",
+                tip: "Start with AI for quantity, then use human collaboration for quality and ownership."
+            }, {
+                question: "You're using AI to improve your writing. What's the ultimate goal?",
+                options: [
+                    "Make your writing sound more like an AI wrote it — flawless but impersonal.",
+                    "Use AI to enhance your clarity and impact while maintaining your authentic voice.",
+                    "Let AI write everything — your personal style doesn't matter.",
+                    "Use AI to make your writing as fancy and complex as possible."
+                ],
+                correct: 1,
+                feedback: "✍️ AI as your editor, not your replacement! Great communication is authentic, clear, and human. Use AI to polish, clarify, and strengthen — but always keep your unique voice and perspective at the center.",
+                tip: "Ask AI: 'How can I make this clearer?' not 'Rewrite this for me.' Then edit thoughtfully."
+            }];
+
+            // ---------- STATE ----------
+            let questions = [];
+            let currentQ = 0;
+            let score = 0;
+            let answered = false;
+            let totalQuestions = 0;
+
+            // DOM refs
+            const qNumber = document.getElementById('qNumber');
+            const qText = document.getElementById('qText');
+            const optionsGrid = document.getElementById('optionsGrid');
+            const feedbackText = document.getElementById('feedbackText');
+            const feedbackBox = document.getElementById('feedbackBox');
+            const nextBtn = document.getElementById('nextBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const restartBtn = document.getElementById('restartBtn');
+            const scoreDisplay = document.getElementById('scoreDisplay');
+            const progressFill = document.getElementById('progressFill');
+            const quizContent = document.getElementById('quizContent');
+            const resultScreen = document.getElementById('resultScreen');
+
+            // letters for options
+            const LETTERS = ['A', 'B', 'C', 'D'];
+
+            // ---------- SHUFFLE FUNCTION (Fisher-Yates) ----------
+            function shuffleArray(array) {
+                const arr = [...array];
+                for (let i = arr.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [arr[i], arr[j]] = [arr[j], arr[i]];
+                }
+                return arr;
+            }
+
+            // ---------- INITIALIZE / RESET QUESTIONS ----------
+            function initQuestions() {
+                questions = shuffleArray(MASTER_QUESTIONS);
+                totalQuestions = questions.length;
+                currentQ = 0;
+                score = 0;
+                answered = false;
+                updateScore();
+            }
+
+            // ---------- RENDER ----------
+            function renderQuestion() {
+                const q = questions[currentQ];
+                if (!q) return;
+                qNumber.textContent = `Q${currentQ + 1}`;
+                qText.textContent = q.question;
+
+                // options
+                optionsGrid.innerHTML = '';
+                q.options.forEach((opt, idx) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.dataset.idx = idx;
+                    btn.innerHTML = `<span class="letter">${LETTERS[idx]}</span> ${opt}`;
+                    btn.addEventListener('click', () => handleOptionClick(idx, btn));
+                    optionsGrid.appendChild(btn);
+                });
+
+                // reset feedback
+                feedbackText.innerHTML = 'Pick an option from above.';
+                feedbackBox.querySelector('.emoji-big').textContent = '💬';
+
+                // reset next btn
+                nextBtn.disabled = true;
+                answered = false;
+
+                // progress
+                progressFill.style.width = `${((currentQ) / totalQuestions) * 100}%`;
+                updateScore();
+            }
+
+            // ---------- HANDLE OPTION CLICK ----------
+            function handleOptionClick(idx, btn) {
+                if (answered) return;
+                const q = questions[currentQ];
+                const isCorrect = (idx === q.correct);
+                const allBtns = optionsGrid.querySelectorAll('.option-btn');
+
+                // disable all
+                allBtns.forEach(b => b.classList.add('disabled'));
+
+                // highlight correct / wrong
+                allBtns.forEach((b, i) => {
+                    if (i === q.correct) b.classList.add('correct');
+                    else if (i === idx && !isCorrect) b.classList.add('wrong');
+                });
+
+                // update score
+                if (isCorrect) {
+                    score++;
+                    updateScore();
+                }
+
+                // feedback
+                const emoji = isCorrect ? '🎉' : '😅';
+                feedbackBox.querySelector('.emoji-big').textContent = emoji;
+                const tipHtml = q.tip ? `<span class="tip">💡 ${q.tip}</span>` : '';
+                feedbackText.innerHTML = `${q.feedback} ${tipHtml}`;
+
+                answered = true;
+                nextBtn.disabled = false;
+
+                // check if last question
+                if (currentQ === totalQuestions - 1) {
+                    nextBtn.textContent = '🏁 See Results';
+                } else {
+                    nextBtn.textContent = 'Next →';
+                }
+            }
+
+            // ---------- NEXT / RESULTS ----------
+            function goToNext() {
+                if (!answered) return;
+                if (currentQ === totalQuestions - 1) {
+                    showResults();
+                    return;
+                }
+                currentQ++;
+                renderQuestion();
+                nextBtn.disabled = true;
+            }
+
+            // ---------- SHOW RESULTS ----------
+            function showResults() {
+                quizContent.classList.add('hide');
+                resultScreen.classList.remove('hide');
+                progressFill.style.width = '100%';
+
+                const pct = Math.round((score / totalQuestions) * 100);
+                let title, sub, emoji;
+                if (pct === 100) {
+                    emoji = '🏆';
+                    title = 'Comm Champion!';
+                    sub = 'Flawless! You\'re a master of active listening, clarity, adaptability, and AI-enhanced communication. Your colleagues are lucky.';
+                } else if (pct >= 75) {
+                    emoji = '🌟';
+                    title = 'Pro Communicator!';
+                    sub = 'Strong foundation! You know your stuff — just a few tweaks to reach legend status. And you\'re using AI like a pro!';
+                } else if (pct >= 50) {
+                    emoji = '📈';
+                    title = 'Comm Builder!';
+                    sub = 'Good start! Focus on active listening, constructive feedback, and using AI as a tool to level up.';
+                } else {
+                    emoji = '🌱';
+                    title = 'Comm Sprout!';
+                    sub = 'Everyone starts somewhere! Revisit the strategies — active listening, clarity, adaptability, feedback culture, and AI as your assistant.';
+                }
+
+                document.querySelector('#resultScreen .big-emoji').textContent = emoji;
+                document.getElementById('resultTitle').textContent = title;
+                document.getElementById('resultSub').textContent = sub;
+
+                // badges
+                const grid = document.getElementById('badgeGrid');
+                grid.innerHTML = '';
+                const badges = [
+                    `✅ Score: ${score}/${totalQuestions}`,
+                    `📊 ${pct}%`,
+                    `🧠 ${pct >= 75 ? 'Comm Pro' : 'Learning Mode'}`,
+                    `🤖 ${pct >= 60 ? 'AI-Savvy' : 'AI Explorer'}`
+                ];
+                badges.forEach(b => {
+                    const span = document.createElement('span');
+                    span.className = 'badge-item';
+                    span.innerHTML = b;
+                    grid.appendChild(span);
+                });
+
+                updateScore();
+            }
+
+            // ---------- RESET QUIZ (with shuffle) ----------
+            function resetQuiz() {
+                initQuestions(); // reshuffles
+                quizContent.classList.remove('hide');
+                resultScreen.classList.add('hide');
+                nextBtn.textContent = 'Next →';
+                renderQuestion();
+                updateScore();
+                progressFill.style.width = '0%';
+            }
+
+            // ---------- UPDATE SCORE ----------
+            function updateScore() {
+                scoreDisplay.textContent = score;
+            }
+
+            // ---------- EVENT BINDING ----------
+            nextBtn.addEventListener('click', goToNext);
+            resetBtn.addEventListener('click', resetQuiz);
+            restartBtn.addEventListener('click', resetQuiz);
+
+            // ---------- INIT ----------
+            initQuestions();
+            renderQuestion();
+            updateScore();
+
+            // keyboard support
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !nextBtn.disabled) {
+                    goToNext();
+                }
+                if (e.key >= '1' && e.key <= '4' && !answered) {
+                    const idx = parseInt(e.key) - 1;
+                    const btns = optionsGrid.querySelectorAll('.option-btn');
+                    if (btns[idx]) btns[idx].click();
+                }
+            });
+
+        })();
+    </script>
+</body>
+</html>
