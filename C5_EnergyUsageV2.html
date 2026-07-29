@@ -1,0 +1,475 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>AI Energy Footprint · compact</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background: #f0f4f8;
+      font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      padding: 16px 12px;
+      color: #1a2c3e;
+    }
+    .container {
+      max-width: 820px;
+      margin: 0 auto;
+    }
+    .card {
+      background: white;
+      border-radius: 28px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+      padding: 20px 16px 24px;
+      transition: 0.2s;
+    }
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 4px;
+    }
+    h1 span {
+      background: #e9ecef;
+      font-size: 0.7rem;
+      font-weight: 500;
+      padding: 2px 10px;
+      border-radius: 40px;
+      color: #2c3e50;
+    }
+    .disclaimer {
+      background: #fff7e5;
+      border-left: 4px solid #f5a623;
+      padding: 8px 14px;
+      border-radius: 16px;
+      font-size: 0.75rem;
+      margin: 8px 0 12px 0;
+      color: #5a4a1a;
+      line-height: 1.4;
+    }
+    .disclaimer strong { color: #c47a00; }
+    .disclaimer hr { margin: 6px 0; border: 0; border-top: 1px solid #eedbb0; }
+    .disclaimer ul { margin: 4px 0 0 16px; padding-left: 4px; }
+    .disclaimer li { margin-bottom: 0px; }
+
+    .section {
+      background: #f9fafc;
+      border-radius: 18px;
+      padding: 10px 14px;
+      margin-bottom: 12px;
+      border: 1px solid #e6edf4;
+    }
+    .section-title {
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #1f3a4b;
+    }
+    .slider-group {
+      margin-bottom: 6px;
+    }
+    .slider-label {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 500;
+      font-size: 0.8rem;
+      margin-bottom: 2px;
+    }
+    input[type="range"] {
+      width: 100%;
+      height: 5px;
+      -webkit-appearance: none;
+      background: #d0dde9;
+      border-radius: 10px;
+      outline: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      background: #2c7da0;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+      border: none;
+    }
+    .value-display {
+      background: white;
+      padding: 2px 12px;
+      border-radius: 40px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #1f6392;
+      display: inline-block;
+    }
+    .profile-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 6px 0 4px 0;
+    }
+    .profile-btn {
+      background: white;
+      border: 1px solid #bdd3e8;
+      padding: 4px 14px;
+      border-radius: 40px;
+      font-weight: 500;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: 0.2s;
+      color: #1f6392;
+    }
+    .profile-btn:hover {
+      background: #e1f0fa;
+      border-color: #2c7da0;
+    }
+
+    /* results panel – compact */
+    .results-panel {
+      background: linear-gradient(135deg, #f1f9fe 0%, #ffffff 100%);
+      border-radius: 20px;
+      padding: 14px 14px 10px;
+      margin: 6px 0 10px;
+      border: 1px solid #cde3f0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    }
+    .energy-total {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #1e6f5c;
+      border-bottom: 2px dashed #cfe3ef;
+      padding-bottom: 6px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+    }
+    .energy-number {
+      font-size: 2rem;
+      letter-spacing: -0.5px;
+    }
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .metric-card {
+      background: white;
+      border-radius: 18px;
+      padding: 6px 8px 6px 10px;
+      border: 1px solid #e2edf5;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .metric-emoji {
+      font-size: 1.2rem;
+      line-height: 1;
+    }
+    .metric-info {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+    }
+    .metric-title {
+      font-weight: 600;
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: #4a6f8f;
+    }
+    .metric-value {
+      font-weight: 800;
+      font-size: 1rem;
+      color: #1f3a4b;
+    }
+    .metric-sub {
+      font-size: 0.5rem;
+      color: #6c8eaa;
+      white-space: nowrap;
+    }
+
+    .math-toggle {
+      margin: 6px 0 4px;
+      text-align: center;
+    }
+    .math-btn {
+      background: none;
+      border: none;
+      color: #2c7da0;
+      font-weight: 600;
+      font-size: 0.75rem;
+      cursor: pointer;
+      text-decoration: underline;
+      padding: 4px 8px;
+    }
+    .math-content {
+      background: #f4f9fe;
+      padding: 12px 14px;
+      border-radius: 16px;
+      font-size: 0.7rem;
+      font-family: monospace;
+      margin-top: 6px;
+      border: 1px solid #dbe9f3;
+      display: none;
+      line-height: 1.5;
+    }
+    .math-content.show { display: block; }
+    .sources {
+      font-size: 0.6rem;
+      text-align: center;
+      margin-top: 14px;
+      color: #5f7f9c;
+      border-top: 1px solid #e2edf5;
+      padding-top: 12px;
+    }
+    footer {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 0.65rem;
+      color: #7c9bb5;
+    }
+    hr { margin: 6px 0; border: 0; border-top: 1px solid #e2edf5; }
+
+    /* compact overrides */
+    @media (max-width: 600px) {
+      .metric-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .card { padding: 14px 12px; }
+      .energy-total { font-size: 1.2rem; }
+      .energy-number { font-size: 1.6rem; }
+    }
+    @media (max-width: 420px) {
+      .metric-grid { grid-template-columns: 1fr 1fr; }
+      .metric-card { padding: 4px 6px; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="card">
+    <h1>
+      🧠 AI Energy Footprint 
+    </h1>
+    <div class="disclaimer">
+      <strong>⚠️ Estimates</strong> based on peer-reviewed research (2021–2024). For relative comparison.
+      <hr>
+      <b>🔍 Energy to generate this app: ~2 Wh</b>
+      <ul>
+        <li>💡 LED 10W → 12 min</li>
+        <li>📱 Smartphone charge → 13%</li>
+        <li>🧺 Washing machine → 0.4% cycle</li>
+        <li>💧 Water cooling → 0.5 mL</li>
+      </ul>
+    </div>
+
+    <!-- section: text -->
+    <div class="section">
+      <div class="section-title">📝 TEXT</div>
+      <div class="slider-group">
+        <div class="slider-label"><span>Pieces / day</span><span id="textCountVal" class="value-display">20</span></div>
+        <input type="range" id="textPieces" min="0" max="100" value="20" step="1">
+      </div>
+      <div class="slider-group">
+        <div class="slider-label"><span>Words / piece</span><span id="wordsPerPieceVal" class="value-display">100</span></div>
+        <input type="range" id="wordsPerPiece" min="10" max="500" value="100" step="5">
+      </div>
+    </div>
+
+    <!-- image -->
+    <div class="section">
+      <div class="section-title">🖼️ IMAGE</div>
+      <div class="slider-group">
+        <div class="slider-label"><span>Images / day</span><span id="imagesCountVal" class="value-display">5</span></div>
+        <input type="range" id="imageCount" min="0" max="50" value="5" step="1">
+      </div>
+    </div>
+
+    <!-- audio -->
+    <div class="section">
+      <div class="section-title">🔊 AUDIO (1‑min clips)</div>
+      <div class="slider-group">
+        <div class="slider-label"><span>Clips / day</span><span id="audioCountVal" class="value-display">3</span></div>
+        <input type="range" id="audioCount" min="0" max="30" value="3" step="1">
+      </div>
+    </div>
+
+    <!-- presets -->
+    <div class="profile-buttons">
+      <button class="profile-btn" data-profile="light">🌱 Light</button>
+      <button class="profile-btn" data-profile="average">✨ Average</button>
+      <button class="profile-btn" data-profile="power">⚡ Power</button>
+    </div>
+
+    <!-- results panel compact -->
+    <div class="results-panel">
+      <div class="energy-total">
+        <span>⚡ Daily AI energy</span>
+        <span><span class="energy-number" id="totalEnergyWh">8.50</span> Wh</span>
+      </div>
+      <div class="metric-grid">
+        <div class="metric-card"><span class="metric-emoji">🧺</span><div class="metric-info"><span class="metric-title">Washing machine</span><span class="metric-value" id="washingMachine">1.02</span><span class="metric-sub">min</span></div></div>
+        <div class="metric-card"><span class="metric-emoji">🏠</span><div class="metric-info"><span class="metric-title">Rural home</span><span class="metric-value" id="ruralHomePercent">4.25</span><span class="metric-sub">% daily</span></div></div>
+        <div class="metric-card"><span class="metric-emoji">💡</span><div class="metric-info"><span class="metric-title">LED 10W</span><span class="metric-value" id="ledHours">51.0</span><span class="metric-sub">min</span></div></div>
+        <div class="metric-card"><span class="metric-emoji">📱</span><div class="metric-info"><span class="metric-title">Smartphone</span><span class="metric-value" id="phoneCharges">0.57</span><span class="metric-sub">charges</span></div></div>
+        <div class="metric-card"><span class="metric-emoji">💧</span><div class="metric-info"><span class="metric-title">Water cooling</span><span class="metric-value" id="waterLiters">0.0021</span><span class="metric-sub">L (2.1 mL)</span></div></div>
+        <div class="metric-card"><span class="metric-emoji">📆</span><div class="metric-info"><span class="metric-title">Monthly</span><span class="metric-value" id="monthlyWh">255</span><span class="metric-sub">Wh</span></div></div>
+      </div>
+    </div>
+
+    <!-- math toggle -->
+    <div class="math-toggle">
+      <button class="math-btn" id="toggleMathBtn">🔍 Show math & assumptions</button>
+    </div>
+    <div id="mathSection" class="math-content">
+      <strong>⚙️ Calculation method (estimates):</strong><br>
+      • Text: 0.001 Wh/word → (pieces × words) × 0.001<br>
+      • Image: 1.0 Wh each<br>
+      • Audio (1 min): 3.0 Wh/clip<br>
+      <strong>🌍 Conversions:</strong><br>
+      • Washing machine: 500 Wh/cycle → minutes = (Wh/500)×60<br>
+      • Rural home: 200 Wh/day → % = (Wh/200)×100<br>
+      • LED 10W: min = (Wh/10)×60<br>
+      • Smartphone: 15 Wh/charge → charges = Wh/15<br>
+      • <strong>💧 Water:</strong> 0.00025 L/Wh (0.25 L/kWh) — corrected.<br>
+      • Monthly: daily × 30<br><br>
+      <strong>📌</strong> Illustrative. Actual varies by model, hardware, PUE.
+    </div>
+
+    <div class="sources">
+      📚 <strong>Sources:</strong> Strubell et al. (2019), Patterson et al. (2021), Luccioni et al. (2023), Ren et al. (2023), Google Sustainability 2023.
+    </div>
+  </div>
+  <footer>
+    ⚡ Explore your creative footprint — every prompt, image, sound has impact.<br>
+    <span><I>Frontier Institute of Technology</I></span>
+  </footer>
+</div>
+
+<script>
+  (function() {
+    // DOM refs
+    const textPieces = document.getElementById('textPieces');
+    const wordsPerPiece = document.getElementById('wordsPerPiece');
+    const imageCount = document.getElementById('imageCount');
+    const audioCount = document.getElementById('audioCount');
+
+    const textCountVal = document.getElementById('textCountVal');
+    const wordsPerPieceVal = document.getElementById('wordsPerPieceVal');
+    const imagesCountVal = document.getElementById('imagesCountVal');
+    const audioCountVal = document.getElementById('audioCountVal');
+
+    const totalEnergySpan = document.getElementById('totalEnergyWh');
+    const washingMachineSpan = document.getElementById('washingMachine');
+    const ruralHomePercentSpan = document.getElementById('ruralHomePercent');
+    const ledHoursSpan = document.getElementById('ledHours');
+    const phoneChargesSpan = document.getElementById('phoneCharges');
+    const waterLitersSpan = document.getElementById('waterLiters');
+    const monthlyWhSpan = document.getElementById('monthlyWh');
+
+    const ENERGY_PER_WORD = 0.001;
+    const ENERGY_PER_IMAGE = 1.0;
+    const ENERGY_PER_AUDIO_CLIP = 3.0;
+
+    const WASHING_CYCLE_WH = 500;
+    const RURAL_HOME_DAILY_WH = 200;
+    const LED_WATT = 10;
+    const SMARTPHONE_CHARGE_WH = 15;
+    const WATER_LITERS_PER_WH = 0.00025;
+
+    function formatNumber(num, decimals = 2) {
+      return Number(num.toFixed(decimals));
+    }
+
+    function update() {
+      let tP = parseFloat(textPieces.value) || 0;
+      let wPP = parseFloat(wordsPerPiece.value) || 0;
+      let iC = parseFloat(imageCount.value) || 0;
+      let aC = parseFloat(audioCount.value) || 0;
+
+      textCountVal.innerText = tP;
+      wordsPerPieceVal.innerText = wPP;
+      imagesCountVal.innerText = iC;
+      audioCountVal.innerText = aC;
+
+      const totalWords = tP * wPP;
+      const textEnergy = totalWords * ENERGY_PER_WORD;
+      const imageEnergy = iC * ENERGY_PER_IMAGE;
+      const audioEnergy = aC * ENERGY_PER_AUDIO_CLIP;
+      let total = textEnergy + imageEnergy + audioEnergy;
+
+      totalEnergySpan.innerText = formatNumber(total, 2);
+
+      let washMin = (total / WASHING_CYCLE_WH) * 60;
+      washingMachineSpan.innerText = formatNumber(washMin, 2);
+
+      let ruralPct = (total / RURAL_HOME_DAILY_WH) * 100;
+      ruralHomePercentSpan.innerText = formatNumber(ruralPct, 2);
+
+      let ledMin = (total / LED_WATT) * 60;
+      ledHoursSpan.innerText = formatNumber(ledMin, 1);
+
+      let phoneChg = total / SMARTPHONE_CHARGE_WH;
+      phoneChargesSpan.innerText = formatNumber(phoneChg, 2);
+
+      let waterL = total * WATER_LITERS_PER_WH;
+      waterLitersSpan.innerText = formatNumber(waterL, 4);
+
+      let monthly = total * 30;
+      monthlyWhSpan.innerText = formatNumber(monthly, 0);
+    }
+
+    // listeners
+    [textPieces, wordsPerPiece, imageCount, audioCount].forEach(el => {
+      el.addEventListener('input', update);
+    });
+
+    // presets
+    const profiles = {
+      light: { textPieces: 5, wordsPerPiece: 50, images: 1, audio: 0 },
+      average: { textPieces: 20, wordsPerPiece: 100, images: 5, audio: 3 },
+      power: { textPieces: 50, wordsPerPiece: 150, images: 20, audio: 10 }
+    };
+
+    document.querySelectorAll('.profile-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const key = btn.getAttribute('data-profile');
+        const p = profiles[key];
+        if (p) {
+          textPieces.value = p.textPieces;
+          wordsPerPiece.value = p.wordsPerPiece;
+          imageCount.value = p.images;
+          audioCount.value = p.audio;
+          update();
+        }
+      });
+    });
+
+    // math toggle
+    const toggleBtn = document.getElementById('toggleMathBtn');
+    const mathSection = document.getElementById('mathSection');
+    toggleBtn.addEventListener('click', () => {
+      mathSection.classList.toggle('show');
+      toggleBtn.innerText = mathSection.classList.contains('show') ? '🔒 Hide math & assumptions' : '🔍 Show math & assumptions';
+    });
+
+    update();
+  })();
+</script>
+</body>
+</html>
