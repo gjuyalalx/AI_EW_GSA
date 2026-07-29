@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -264,7 +263,7 @@
 <div class="container">
   <div class="card">
     <h1>
-      ⚡️ AI Energy Footprint 
+      🧠 AI Energy Footprint 
     </h1>
     <div class="disclaimer">
       <strong>⚠️ Estimates</strong> based on peer-reviewed research (2021–2024). For relative comparison.
@@ -300,12 +299,12 @@
       </div>
     </div>
 
-    <!-- audio -->
+    <!-- VIDEO – 1‑minute clip (benchmark: ~9 Wh per minute) -->
     <div class="section">
-      <div class="section-title">🔊 AUDIO (1‑min clips)</div>
+      <div class="section-title">🎬 VIDEO (1‑min clip)</div>
       <div class="slider-group">
-        <div class="slider-label"><span>Clips / day</span><span id="audioCountVal" class="value-display">3</span></div>
-        <input type="range" id="audioCount" min="0" max="30" value="3" step="1">
+        <div class="slider-label"><span>Clips / day</span><span id="videoCountVal" class="value-display">1</span></div>
+        <input type="range" id="videoCount" min="0" max="20" value="1" step="1">
       </div>
     </div>
 
@@ -340,7 +339,7 @@
       <strong>⚙️ Calculation method (estimates):</strong><br>
       • Text: 0.001 Wh/word → (pieces × words) × 0.001<br>
       • Image: 1.0 Wh each<br>
-      • Audio (1 min): 3.0 Wh/clip<br>
+      • <strong>Video (1‑min):</strong> 9.0 Wh per clip (benchmark: 0.15 Wh/s × 60s)<br>
       <strong>🌍 Conversions:</strong><br>
       • Washing machine: 500 Wh/cycle → minutes = (Wh/500)×60<br>
       • Rural home: 200 Wh/day → % = (Wh/200)×100<br>
@@ -348,7 +347,7 @@
       • Smartphone: 15 Wh/charge → charges = Wh/15<br>
       • <strong>💧 Water:</strong> 0.00025 L/Wh (0.25 L/kWh) — corrected.<br>
       • Monthly: daily × 30<br><br>
-      <strong>📌</strong> Illustrative. Actual varies by model, hardware, PUE.
+      <strong>📌</strong> Illustrative. Actual varies by model, hardware, PUE. Video based on generative AI inference (~0.15 Wh/s for 1‑min clip).
     </div>
 
     <div class="sources">
@@ -356,7 +355,7 @@
     </div>
   </div>
   <footer>
-    ⚡ Explore your creative footprint — every prompt, image, sound has impact.<br>
+    ⚡ Explore your creative footprint — every prompt, image, video has impact.<br>
     <span><I>Frontier Institute of Technology</I></span>
   </footer>
 </div>
@@ -367,12 +366,12 @@
     const textPieces = document.getElementById('textPieces');
     const wordsPerPiece = document.getElementById('wordsPerPiece');
     const imageCount = document.getElementById('imageCount');
-    const audioCount = document.getElementById('audioCount');
+    const videoCount = document.getElementById('videoCount');   // 1‑min clips
 
     const textCountVal = document.getElementById('textCountVal');
     const wordsPerPieceVal = document.getElementById('wordsPerPieceVal');
     const imagesCountVal = document.getElementById('imagesCountVal');
-    const audioCountVal = document.getElementById('audioCountVal');
+    const videoCountVal = document.getElementById('videoCountVal');
 
     const totalEnergySpan = document.getElementById('totalEnergyWh');
     const washingMachineSpan = document.getElementById('washingMachine');
@@ -382,9 +381,10 @@
     const waterLitersSpan = document.getElementById('waterLiters');
     const monthlyWhSpan = document.getElementById('monthlyWh');
 
+    // constants – video: 9.0 Wh per 1‑minute clip (0.15 Wh/s × 60s)
     const ENERGY_PER_WORD = 0.001;
     const ENERGY_PER_IMAGE = 1.0;
-    const ENERGY_PER_AUDIO_CLIP = 3.0;
+    const ENERGY_PER_VIDEO_CLIP = 9.0;   // 1‑min clip
 
     const WASHING_CYCLE_WH = 500;
     const RURAL_HOME_DAILY_WH = 200;
@@ -400,18 +400,18 @@
       let tP = parseFloat(textPieces.value) || 0;
       let wPP = parseFloat(wordsPerPiece.value) || 0;
       let iC = parseFloat(imageCount.value) || 0;
-      let aC = parseFloat(audioCount.value) || 0;
+      let vC = parseFloat(videoCount.value) || 0;
 
       textCountVal.innerText = tP;
       wordsPerPieceVal.innerText = wPP;
       imagesCountVal.innerText = iC;
-      audioCountVal.innerText = aC;
+      videoCountVal.innerText = vC;
 
       const totalWords = tP * wPP;
       const textEnergy = totalWords * ENERGY_PER_WORD;
       const imageEnergy = iC * ENERGY_PER_IMAGE;
-      const audioEnergy = aC * ENERGY_PER_AUDIO_CLIP;
-      let total = textEnergy + imageEnergy + audioEnergy;
+      const videoEnergy = vC * ENERGY_PER_VIDEO_CLIP;
+      let total = textEnergy + imageEnergy + videoEnergy;
 
       totalEnergySpan.innerText = formatNumber(total, 2);
 
@@ -435,15 +435,15 @@
     }
 
     // listeners
-    [textPieces, wordsPerPiece, imageCount, audioCount].forEach(el => {
+    [textPieces, wordsPerPiece, imageCount, videoCount].forEach(el => {
       el.addEventListener('input', update);
     });
 
-    // presets
+    // presets (video values for 1‑min clips)
     const profiles = {
-      light: { textPieces: 5, wordsPerPiece: 50, images: 1, audio: 0 },
-      average: { textPieces: 20, wordsPerPiece: 100, images: 5, audio: 3 },
-      power: { textPieces: 50, wordsPerPiece: 150, images: 20, audio: 10 }
+      light: { textPieces: 5, wordsPerPiece: 50, images: 1, video: 0 },
+      average: { textPieces: 20, wordsPerPiece: 100, images: 5, video: 1 },
+      power: { textPieces: 50, wordsPerPiece: 150, images: 20, video: 3 }
     };
 
     document.querySelectorAll('.profile-btn').forEach(btn => {
@@ -454,7 +454,7 @@
           textPieces.value = p.textPieces;
           wordsPerPiece.value = p.wordsPerPiece;
           imageCount.value = p.images;
-          audioCount.value = p.audio;
+          videoCount.value = p.video;
           update();
         }
       });
