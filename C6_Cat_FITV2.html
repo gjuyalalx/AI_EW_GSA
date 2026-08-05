@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>AI Career Catalyst | Smart Prompt Library</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(145deg, #f0f4fa 0%, #e3eaf2 100%);
+      font-family: 'Inter', system-ui, 'Segoe UI', 'Roboto', sans-serif;
+      padding: 2rem 1.5rem;
+      color: #103049;
+      min-height: 100vh;
+    }
+
+    .app-container {
+      max-width: 1300px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 2rem;
+      padding: 1.5rem 1rem;
+      background: linear-gradient(135deg, #103049, #1a4a6a);
+      border-radius: 2rem;
+      box-shadow: 0 8px 32px rgba(16, 48, 73, 0.25);
+    }
+
+    .hero h1 {
+      font-size: 2.3rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #ffffff, #FFD147, #B4E000);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: -0.3px;
+    }
+
+    .hero p {
+      color: rgba(255, 255, 255, 0.85);
+      margin-top: 0.5rem;
+      font-weight: 500;
+      font-size: 1.1rem;
+    }
+
+    .tabs-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-bottom: 2rem;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(10px);
+      padding: 1rem 1.2rem;
+      border-radius: 60px;
+      box-shadow: 0 8px 24px rgba(16, 48, 73, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+
+    .tab-btn {
+      background: #eef2f7;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      color: #103049;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      letter-spacing: 0.3px;
+      flex: 0 1 auto;
+      white-space: nowrap;
+      border: 2px solid transparent;
+    }
+
+    @media (max-width: 860px) {
+      .tab-btn {
+        padding: 10px 18px;
+        font-size: 0.8rem;
+        white-space: normal;
+        text-align: center;
+      }
+    }
+
+    .tab-btn.active {
+      background: #B4E000;
+      color: #103049;
+      box-shadow: 0 6px 16px rgba(180, 224, 0, 0.4);
+      border-color: #B4E000;
+    }
+
+    .tab-btn:hover:not(.active) {
+      background: #dce3ed;
+      transform: translateY(-2px);
+      border-color: #4278EC;
+    }
+
+    .tab-btn:active {
+      transform: scale(0.96);
+    }
+
+    .content-panel {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 2rem;
+      box-shadow: 0 20px 40px -12px rgba(16, 48, 73, 0.15);
+      padding: 2rem 2rem 2rem 2rem;
+      transition: opacity 0.2s ease, transform 0.25s ease;
+      backdrop-filter: blur(2px);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+
+    .text-segment {
+      line-height: 1.6;
+    }
+
+    .text-segment p {
+      margin-bottom: 1rem;
+      color: #1a3a52;
+    }
+
+    .callout {
+      background: #f7faff;
+      border-left: 5px solid #B4E000;
+      border-radius: 20px;
+      padding: 1.2rem 1.5rem;
+      margin: 1.5rem 0;
+      box-shadow: 0 4px 12px rgba(16, 48, 73, 0.05);
+      position: relative;
+      border: 1px solid rgba(180, 224, 0, 0.15);
+    }
+
+    .callout-content h {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: #103049;
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+
+    .callout-content h::after {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 4px;
+      background: #B4E000;
+      border-radius: 50%;
+      margin-left: 8px;
+    }
+
+    .placeholder {
+      font-style: italic;
+      color: #4278EC;
+      background: rgba(66, 120, 236, 0.10);
+      padding: 0 4px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    .badge-icon {
+      display: inline-block;
+      background: #FFD147;
+      border-radius: 40px;
+      padding: 4px 14px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: #103049;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    hr {
+      margin: 1.5rem 0 1rem;
+      border: none;
+      border-top: 2px solid #e8edf4;
+      border-radius: 2px;
+    }
+
+    .footer-tip {
+      font-size: 0.8rem;
+      color: #4a6a7a;
+      margin-top: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    .footer-tip .credit {
+      font-weight: 700;
+      color: #103049;
+      background: #FFD147;
+      padding: 4px 14px;
+      border-radius: 40px;
+      font-size: 0.75rem;
+    }
+
+    .footer-tip em {
+      color: #4278EC;
+      font-style: italic;
+    }
+
+    /* Small decorative dots for visual interest */
+    .accent-dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      margin-right: 4px;
+    }
+
+    .dot-green { background: #B4E000; }
+    .dot-blue { background: #4278EC; }
+    .dot-yellow { background: #FFD147; }
+    .dot-pink { background: #DF8CBB; }
+    .dot-teal { background: #008C6B; }
+    .dot-orange { background: #F79220; }
+
+    @media (max-width: 780px) {
+      body {
+        padding: 1rem;
+      }
+      .content-panel {
+        padding: 1.2rem;
+      }
+      .tabs-nav {
+        border-radius: 32px;
+        padding: 0.8rem;
+        gap: 0.5rem;
+      }
+      .hero {
+        padding: 1rem 0.8rem;
+      }
+      .hero h1 {
+        font-size: 1.6rem;
+      }
+      .footer-tip {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  <div class="hero">
+    <h1>AI Career Catalyst</h1>
+    <p>Smart prompts for mission, brand, sales, operations & growth.</p>
+  </div>
+
+  <div class="tabs-nav" id="tabsNav"></div>
+  <div class="content-panel" id="dynamicPanel">
+    <div class="text-segment" style="text-align:center; padding: 2rem;">
+      <span class="badge-icon">Assistant ready</span>
+      <p>Select a category above to unlock curated prompts & strategies.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  function formatPlaceholders(text) {
+    return text.replace(/\[([^\]]+)\]/g, '<span class="placeholder">[$1]</span>');
+  }
+
+  const sections = [
+    {
+      id: "mission",
+      label: "Mission & Vision",
+      shortDesc: "Define your personal mission and vision aligned with company goals.",
+      promptText: `Act as a highly accomplished professional in [industry], with deep expertise in contributing to organizational success. Define your personal mission and vision, highlighting how your skills and ambitions align with your company's objectives. The mission should clearly describe your role, what you aim to accomplish, and the unique value you bring. Your vision should showcase your long-term goals, illustrating how you see your growth contributing to the company's future. Both statements should be clear, memorable, and reflective of the company's mission and values. They should inspire your colleagues and demonstrate your leadership potential. Ensure that your personal mission and vision are adaptable, allowing room for changes in your role or career path as the company evolves. Please provide a list of questions I need to answer to give you enough context before responding.`
+    },
+    {
+      id: "standout",
+      label: "Stand Out in Field",
+      shortDesc: "Content ideas to demonstrate expertise and build visibility.",
+      promptText: `Act as a Communication Strategist. Develop a list of ideas that demonstrate my expertise in [specific industry or field]. The ideas should align with my professional goals and values, driving engagement, establishing thought leadership, and increasing visibility. Consider incorporating diverse formats such as blog posts, presentations, technical articles, workshops, research summaries, portfolio projects, mentoring activities, conference talks, case studies, and other forms of knowledge sharing. Ensure that each idea is actionable, tailored to my audience & communication medium, and provides clear value. Briefly describe each idea and its potential impact. Before making recommendations, ask questions about my experience, interests, goals, and target audience.`
+    },
+    {
+      id: "personalbrand",
+      label: "Professional Presence",
+      shortDesc: "Build a credible professional presence that reflects your expertise, values, and leadership.",
+      promptText: `Act as a professional branding expert. Develop a comprehensive professional branding strategy for [your name/profession] within [organization name], aimed at increasing visibility, demonstrating expertise, and fostering career growth while aligning with your strengths and accomplishments, technical skills, leadership experiences and areas of future growth. It must also outline actionable steps for communicating your expertise through online presence, resume, publications, networking activities, and portfolio. Please provide a list of questions I need to answer so you have enough context before answering.`
+    },
+    {
+      id: "socialmedia",
+      label: "Professional Communication Strategy",
+      shortDesc: "Plan effective communication for colleagues, clients, stakeholders, and professional audiences.",
+      promptText: `Act as an executive communication advisor. Help me develop a professional communication strategy for my work. Recommend effective approaches for communicating ideas through presentations, reports, proposals, executive summaries, emails, meetings, and public speaking. Suggest communication styles for different audiences including managers, clients, technical teams, executives, and community partners. Before generating recommendations, ask me questions about my role, responsibilities, communication goals, and audience.`
+    },
+    {
+      id: "salespitch",
+      label: "Value Proposition",
+      shortDesc: "Craft a persuasive, value-driven product, service or project pitch.",
+      promptText: `Act as a seasoned salesman. Develop a compelling value proposition for [project, initiative, service, idea or product]. Explain the value proposition through problem being solved, who benefits, why it matters and how solution creates measurable value. Incorporate storytelling techniques to make the proposition relatable and memorable, while highlighting how generative AI can enhance relevance and reach. Use your expertise and years of experience to anticipate objections and be prepared to handle them confidently. Please provide a list of questions I need to answer so you have enough context before answering.`
+    },
+    {
+      id: "objections",
+      label: "Handle Questions and Concerns",
+      shortDesc: "Empathetic, persuasive responses to stakeholder concerns.",
+      promptText: `Act as a seasoned professional with expertise in handling questions and concerns of stakeholders like clients, managers, investors, colleagues and community members. Navigate through stakeholder [questions/concerns] related to [product/service/experience/project]. Your task is to listen actively to the concerns of the stakeholder, acknowledge their reservations, and provide a compelling counter-argument that helps them contribute meaningfully in their role for [product/service/experience/project]. Use AI/LLMs to frame the conversation in a way that benefits both your personal growth and your work's objectives. Guide the conversation towards a positive outcome, always keeping a professional demeanor, and ensure that the stakeholder feels heard and understood. Please provide a list of questions I need to answer so you have enough context before answering.`
+    },
+    {
+      id: "operations",
+      label: "Operational Efficiency",
+      shortDesc: "Streamline workflows, reduce costs, optimize resources.",
+      promptText: `Act as an operations manager. Assess and analyze the current operational processes within your role to identify bottlenecks, inefficiencies, and areas for improvement. Develop and implement strategies to streamline workflows, automate repetitive tasks, optimize resources, and reduce operational costs, all while ensuring your contributions enhance both your personal growth and the organization's success. Please provide a list of questions I need to answer so you have enough context before answering.`
+    },
+    {
+      id: "risk",
+      label: "Risk Management",
+      shortDesc: "Proactive AI-driven risk identification and mitigation.",
+      promptText: `Act as a Business Development Specialist focusing on risk management within an organization. Develop a comprehensive risk management strategy that integrates AI to pro-actively identify and mitigate potential ethical, AI judgement, data privacy and implementation risks in operations, financials, and the broader market environment. Your plan should incorporate AI tools for risk detection and scenario modeling. Assess the likelihood and impact of each identified risk, proposing strategies to mitigate them and leveraging AI for real-time updates. The strategy should include contingency plans for unforeseen challenges, with a review mechanism that ensures regular adjustments to the risk management framework. Ensure the approach aligns with both personal career goals and the organization's objectives. Please provide a list of questions I need to answer to offer the necessary context for crafting the strategy.`
+    },
+    {
+      id: "budget",
+      label: "Budgeting",
+      shortDesc: "Optimize budget allocation for team/department growth.",
+      promptText: `Act as a Financial Advisor. Develop a comprehensive budget allocation strategy for a team or department within your organization for the upcoming fiscal year. Analyze past financial data, current economic trends, and any potential future expenses. Take into consideration the organisational priorities, team's goals, growth prospects, and risk appetite. The allocation should be optimized to enhance both personal productivity and organizational outcomes. Provide detailed recommendations on areas of investment, savings, and any necessary cutbacks. Please provide a list of questions I need to answer so you have enough context before answering.`
+    },
+    {
+      id: "productideas",
+      label: "Solution Ideas",
+      shortDesc: "Innovative solutions based on contextual needs.",
+      promptText: `Act as an innovation strategist and AI solutions consultant. Help me generate practical, high-impact solution ideas for [organization, business, industry, community, or problem area]. Begin by understanding the current challenge, the people affected, existing approaches, available resources, and desired outcomes. Based on that context, propose 8–10 innovative and viable solution ideas that could involve new products, services, workflows, internal tools, digital experiences, AI-powered assistants, process improvements, educational initiatives, sustainability programs, or community-focused solutions. Please provide a list of questions I need to answer so you have enough context before answering.`
+    },
+    {
+      id: "marketgaps",
+      label: "Opportunity Analysis",
+      shortDesc: "Identify unmet needs, process improvements, emerging trends, and opportunities to create value through data-driven analysis.",
+      promptText: `Act as a strategy and innovation consultant. Analyze [organization, business, industry, or community] to identify opportunities for improvement and growth. Consider current challenges, user or customer needs, emerging trends, existing processes, and available resources. Identify opportunities to improve products, services, workflows, customer experiences, operational efficiency, or AI adoption. For each opportunity, explain the problem it addresses, the value it could create, the people who would benefit, and any potential implementation challenges. Recommend the most promising opportunities, prioritizing them based on potential impact and feasibility. Ensure your recommendations are practical, evidence-based, and aligned with the organization's goals. Please provide a list of questions I need to answer so you have enough context before answering.`
+    },
+    {
+      id: "growth",
+      label: "Growth Opportunities",
+      shortDesc: "Unlock personal & company-wide growth with AI analysis.",
+      promptText: `Act as a growth expert specializing in innovative solutions within established organizations. Analyze the current status, operations, and market positioning of the employee's role within the company. Identify potential growth opportunities, untapped segments, and areas for both personal development and company-wide improvement. Provide actionable strategies to leverage these opportunities, focusing on enhancing productivity, building personal expertise, and supporting overall business growth. Ensure the recommendations are practical, cost-effective, and directly tied to the employee's impact on the organization's goals. Present findings in a clear, organized manner with actionable steps for personal and organizational development. Please provide a list of questions I need to answer so you have enough context before answering.`
+    },
+    {
+      id: "decision",
+      label: "Decision Making",
+      shortDesc: "Compare options, evaluate trade-offs, and recommend informed decisions.",
+      promptText: `Act as a strategic decision-making advisor. Help me evaluate a professional decision involving [decision or challenge]. Identify the available options, compare their advantages, disadvantages, risks, costs, and long-term implications. Recommend a structured decision-making framework that incorporates available evidence while acknowledging uncertainty. Before providing recommendations, ask questions to fully understand the situation, priorities, constraints, stakeholders, and desired outcomes. Please provide a list of questions I need to answer so you have enough context before answering.`
+    },
+    {
+      id: "leadership",
+      label: "Leadership and Change",
+      shortDesc: "Lead AI adoption, innovation, and organizational change responsibly.",
+      promptText: `Act as an experienced organizational leadership consultant. Help me develop a strategy for leading an AI-enabled initiative within [organization/team/project]. Recommend how to communicate the vision, engage stakeholders, address resistance, manage risks, support adoption, measure success, and ensure ethical implementation. Suggest leadership behaviors that build trust, encourage collaboration, and help teams adapt to change. Before making recommendations, ask questions to understand the organization, goals, stakeholders, available resources, and potential challenges. Please provide a list of questions I need to answer so you have enough context before answering.`
+    }
+  ];
+
+  const panelEl = document.getElementById('dynamicPanel');
+  let currentActiveId = sections[0].id;
+
+  function generateSectionHTML(section) {
+    const formattedPrompt = formatPlaceholders(section.promptText);
+    return `
+      <div class="text-segment">
+        <span class="badge-icon">✦ ${section.label}</span>
+        <p>${section.shortDesc}</p>
+        <div class="callout">
+          <div class="callout-content">
+            <h>Prompt</h>
+            <p id="prompt-${section.id}-text">${formattedPrompt}</p>
+          </div>
+        </div>
+        <hr />
+        <div class="footer-tip">
+          <span><em>Tip:</em> copy the prompt, replace placeholders, and ask your preferred AI models for follow-up questions.</span>
+          <span><b>Designed at Frontier Institute of Technology</b></span>
+        </div>
+      </div>
+    `;
+  }
+
+  function animatePanelChange(newHtmlContent) {
+    if (!panelEl) return;
+    panelEl.style.opacity = '0';
+    panelEl.style.transform = 'translateY(8px)';
+    setTimeout(() => {
+      panelEl.innerHTML = newHtmlContent;
+      panelEl.offsetHeight;
+      panelEl.style.opacity = '1';
+      panelEl.style.transform = 'translateY(0px)';
+    }, 180);
+  }
+
+  function renderSection(sectionId) {
+    const section = sections.find(s => s.id === sectionId);
+    if (!section) return;
+    currentActiveId = sectionId;
+    const wrapper = generateSectionHTML(section);
+    animatePanelChange(wrapper);
+    updateActiveTab(sectionId);
+  }
+
+  function updateActiveTab(activeId) {
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      if (btn.dataset.id === activeId) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+  }
+
+  function buildTabs() {
+    const nav = document.getElementById('tabsNav');
+    nav.innerHTML = '';
+    sections.forEach(section => {
+      const btn = document.createElement('button');
+      btn.className = 'tab-btn';
+      if (section.id === currentActiveId) btn.classList.add('active');
+      btn.dataset.id = section.id;
+      btn.textContent = section.label;
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (currentActiveId === section.id) return;
+        renderSection(section.id);
+      });
+      nav.appendChild(btn);
+    });
+  }
+
+  buildTabs();
+  renderSection('mission');
+</script>
+</body>
+</html>
