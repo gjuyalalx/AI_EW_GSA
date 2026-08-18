@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>AI Career Catalyst | Bibliothèque de Prompts Intelligents</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(145deg, #f0f4fa 0%, #e3eaf2 100%);
+      font-family: 'Inter', system-ui, 'Segoe UI', 'Roboto', sans-serif;
+      padding: 2rem 1.5rem;
+      color: #103049;
+      min-height: 100vh;
+    }
+
+    .app-container {
+      max-width: 1300px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 2rem;
+      padding: 1.5rem 1rem;
+      background: linear-gradient(135deg, #103049, #1a4a6a);
+      border-radius: 2rem;
+      box-shadow: 0 8px 32px rgba(16, 48, 73, 0.25);
+    }
+
+    .hero h1 {
+      font-size: 2.3rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #ffffff, #FFD147, #B4E000);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: -0.3px;
+    }
+
+    .hero p {
+      color: rgba(255, 255, 255, 0.85);
+      margin-top: 0.5rem;
+      font-weight: 500;
+      font-size: 1.1rem;
+    }
+
+    .tabs-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-bottom: 2rem;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(10px);
+      padding: 1rem 1.2rem;
+      border-radius: 60px;
+      box-shadow: 0 8px 24px rgba(16, 48, 73, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+
+    .tab-btn {
+      background: #eef2f7;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      color: #103049;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      letter-spacing: 0.3px;
+      flex: 0 1 auto;
+      white-space: nowrap;
+      border: 2px solid transparent;
+    }
+
+    @media (max-width: 860px) {
+      .tab-btn {
+        padding: 10px 18px;
+        font-size: 0.8rem;
+        white-space: normal;
+        text-align: center;
+      }
+    }
+
+    .tab-btn.active {
+      background: #B4E000;
+      color: #103049;
+      box-shadow: 0 6px 16px rgba(180, 224, 0, 0.4);
+      border-color: #B4E000;
+    }
+
+    .tab-btn:hover:not(.active) {
+      background: #dce3ed;
+      transform: translateY(-2px);
+      border-color: #4278EC;
+    }
+
+    .tab-btn:active {
+      transform: scale(0.96);
+    }
+
+    .content-panel {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 2rem;
+      box-shadow: 0 20px 40px -12px rgba(16, 48, 73, 0.15);
+      padding: 2rem 2rem 2rem 2rem;
+      transition: opacity 0.2s ease, transform 0.25s ease;
+      backdrop-filter: blur(2px);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+
+    .text-segment {
+      line-height: 1.6;
+    }
+
+    .text-segment p {
+      margin-bottom: 1rem;
+      color: #1a3a52;
+    }
+
+    .callout {
+      background: #f7faff;
+      border-left: 5px solid #B4E000;
+      border-radius: 20px;
+      padding: 1.2rem 1.5rem;
+      margin: 1.5rem 0;
+      box-shadow: 0 4px 12px rgba(16, 48, 73, 0.05);
+      position: relative;
+      border: 1px solid rgba(180, 224, 0, 0.15);
+    }
+
+    .callout-content h {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: #103049;
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+
+    .callout-content h::after {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 4px;
+      background: #B4E000;
+      border-radius: 50%;
+      margin-left: 8px;
+    }
+
+    .placeholder {
+      font-style: italic;
+      color: #4278EC;
+      background: rgba(66, 120, 236, 0.10);
+      padding: 0 4px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    .badge-icon {
+      display: inline-block;
+      background: #FFD147;
+      border-radius: 40px;
+      padding: 4px 14px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: #103049;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    hr {
+      margin: 1.5rem 0 1rem;
+      border: none;
+      border-top: 2px solid #e8edf4;
+      border-radius: 2px;
+    }
+
+    .footer-tip {
+      font-size: 0.8rem;
+      color: #4a6a7a;
+      margin-top: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    .footer-tip .credit {
+      font-weight: 700;
+      color: #103049;
+      background: #FFD147;
+      padding: 4px 14px;
+      border-radius: 40px;
+      font-size: 0.75rem;
+    }
+
+    .footer-tip em {
+      color: #4278EC;
+      font-style: italic;
+    }
+
+    /* Small decorative dots for visual interest */
+    .accent-dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      margin-right: 4px;
+    }
+
+    .dot-green { background: #B4E000; }
+    .dot-blue { background: #4278EC; }
+    .dot-yellow { background: #FFD147; }
+    .dot-pink { background: #DF8CBB; }
+    .dot-teal { background: #008C6B; }
+    .dot-orange { background: #F79220; }
+
+    @media (max-width: 780px) {
+      body {
+        padding: 1rem;
+      }
+      .content-panel {
+        padding: 1.2rem;
+      }
+      .tabs-nav {
+        border-radius: 32px;
+        padding: 0.8rem;
+        gap: 0.5rem;
+      }
+      .hero {
+        padding: 1rem 0.8rem;
+      }
+      .hero h1 {
+        font-size: 1.6rem;
+      }
+      .footer-tip {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  <div class="hero">
+    <h1>AI Career Catalyst</h1>
+    <p>Prompts intelligents pour la mission, la marque, la vente, les opérations et la croissance.</p>
+  </div>
+
+  <div class="tabs-nav" id="tabsNav"></div>
+  <div class="content-panel" id="dynamicPanel">
+    <div class="text-segment" style="text-align:center; padding: 2rem;">
+      <span class="badge-icon">Assistant prêt</span>
+      <p>Sélectionnez une catégorie ci-dessus pour débloquer des prompts et stratégies sur mesure.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  function formatPlaceholders(text) {
+    return text.replace(/\[([^\]]+)\]/g, '<span class="placeholder">[$1]</span>');
+  }
+
+  const sections = [
+    {
+      id: "mission",
+      label: "Mission et Vision",
+      shortDesc: "Définissez votre mission et votre vision personnelles en phase avec les objectifs de l'entreprise.",
+      promptText: `Agissez en tant que professionnel hautement accompli dans le secteur [secteur d'activité], avec une expertise approfondie dans la contribution à la réussite organisationnelle. Définissez votre mission et votre vision personnelles, en mettant en évidence comment vos compétences et ambitions s'alignent sur les objectifs de votre entreprise. La mission doit décrire clairement votre rôle, ce que vous visez à accomplir et la valeur unique que vous apportez. Votre vision doit mettre en avant vos objectifs à long terme, illustrant comment vous voyez votre croissance contribuer à l'avenir de l'entreprise. Les deux déclarations doivent être claires, mémorables et refléter la mission et les valeurs de l'entreprise. Elles doivent inspirer vos collègues et démontrer votre potentiel de leadership. Assurez-vous que votre mission et votre vision personnelles sont adaptables, laissant place à des changements dans votre rôle ou votre parcours professionnel à mesure que l'entreprise évolue. Veuillez fournir une liste de questions auxquelles je dois répondre pour vous donner suffisamment de contexte avant de répondre.`
+    },
+    {
+      id: "standout",
+      label: "Se démarquer dans son domaine",
+      shortDesc: "Idées de contenu pour démontrer votre expertise et accroître votre visibilité.",
+      promptText: `Agissez en tant que stratège en communication. Élaborez une liste d'idées qui démontrent mon expertise dans [secteur ou domaine spécifique]. Les idées doivent correspondre à mes objectifs professionnels et à mes valeurs, stimuler l'engagement, établir un leadership éclairé et accroître la visibilité. Envisagez d'intégrer divers formats tels que des articles de blog, des présentations, des articles techniques, des ateliers, des résumés de recherche, des projets de portefeuille, des activités de mentorat, des conférences, des études de cas et d'autres formes de partage de connaissances. Assurez-vous que chaque idée est réalisable, adaptée à mon public et à mon support de communication, et apporte une valeur claire. Décrivez brièvement chaque idée et son impact potentiel. Avant de faire des recommandations, posez des questions sur mon expérience, mes centres d'intérêt, mes objectifs et mon public cible.`
+    },
+    {
+      id: "personalbrand",
+      label: "Présence professionnelle",
+      shortDesc: "Construisez une présence professionnelle crédible qui reflète votre expertise, vos valeurs et votre leadership.",
+      promptText: `Agissez en tant qu'expert en image de marque professionnelle. Élaborez une stratégie complète de marque professionnelle pour [votre nom/profession] au sein de [nom de l'organisation], visant à accroître la visibilité, démontrer l'expertise et favoriser l'évolution de carrière tout en étant aligné sur vos forces et réalisations, compétences techniques, expériences de leadership et domaines de croissance future. Elle doit également décrire des étapes concrètes pour communiquer votre expertise via votre présence en ligne, votre CV, vos publications, vos activités de réseautage et votre portfolio. Veuillez fournir une liste de questions auxquelles je dois répondre pour vous donner suffisamment de contexte avant de répondre.`
+    },
+    {
+      id: "socialmedia",
+      label: "Stratégie de communication professionnelle",
+      shortDesc: "Planifiez une communication efficace avec les collègues, clients, parties prenantes et publics professionnels.",
+      promptText: `Agissez en tant que conseiller en communication exécutive. Aidez-moi à développer une stratégie de communication professionnelle pour mon travail. Recommandez des approches efficaces pour communiquer des idées via des présentations, rapports, propositions, résumés exécutifs, e-mails, réunions et prises de parole en public. Suggérez des styles de communication pour différents publics, y compris les managers, les clients, les équipes techniques, les dirigeants et les partenaires communautaires. Avant de générer des recommandations, posez-moi des questions sur mon rôle, mes responsabilités, mes objectifs de communication et mon public.`
+    },
+    {
+      id: "salespitch",
+      label: "Proposition de valeur",
+      shortDesc: "Créez un argumentaire convaincant et axé sur la valeur pour un produit, service ou projet.",
+      promptText: `Agissez en tant que vendeur chevronné. Élaborez une proposition de valeur convaincante pour [projet, initiative, service, idée ou produit]. Expliquez la proposition de valeur à travers le problème résolu, les bénéficiaires, pourquoi c'est important et comment la solution crée une valeur mesurable. Intégrez des techniques de narration pour rendre la proposition relatable et mémorable, tout en soulignant comment l'IA générative peut améliorer la pertinence et la portée. Utilisez votre expertise et vos années d'expérience pour anticiper les objections et être prêt à y répondre avec assurance. Veuillez fournir une liste de questions auxquelles je dois répondre pour vous donner suffisamment de contexte avant de répondre.`
+    },
+    {
+      id: "objections",
+      label: "Gérer les questions et préoccupations",
+      shortDesc: "Réponses empathiques et persuasives aux préoccupations des parties prenantes.",
+      promptText: `Agissez en tant que professionnel chevronné spécialisé dans la gestion des questions et préoccupations des parties prenantes telles que les clients, managers, investisseurs, collègues et membres de la communauté. Naviguez à travers les [questions/préoccupations] des parties prenantes liées à [produit/service/expérience/projet]. Votre tâche consiste à écouter activement les préoccupations de la partie prenante, à reconnaître ses réserves et à fournir un contre-argument convaincant qui l'aide à contribuer de manière significative à son rôle pour [produit/service/expérience/projet]. Utilisez l'IA/LLM pour cadrer la conversation d'une manière qui bénéficie à la fois à votre croissance personnelle et aux objectifs de votre travail. Guidez la conversation vers un résultat positif, en gardant toujours un professionnalisme, et assurez-vous que la partie prenante se sente écoutée et comprise. Veuillez fournir une liste de questions auxquelles je dois répondre pour vous donner suffisamment de contexte avant de répondre.`
+    },
+    {
+      id: "operations",
+      label: "Efficacité opérationnelle",
+      shortDesc: "Rationalisez les flux de travail, réduisez les coûts, optimisez les ressources.",
+      promptText: `Agissez en tant que responsable des opérations. Évaluez et analysez les processus opérationnels actuels dans votre rôle pour identifier les goulets d'étranglement, les inefficacités et les domaines d'amélioration. Élaborez et mettez en œuvre des stratégies pour rationaliser les flux de travail, automatiser les tâches répétitives, optimiser les ressources et réduire les coûts opérationnels, tout en veillant à ce que vos contributions améliorent à la fois votre croissance personnelle et le succès de l'organisation. Veuillez fournir une liste de questions auxquelles je dois répondre pour vous donner suffisamment de contexte avant de répondre.`
+    },
+    {
+      id: "risk",
+      label: "Gestion des risques",
+      shortDesc: "Identification et atténuation proactives des risques grâce à l'IA.",
+      promptText: `Agissez en tant que spécialiste du développement commercial axé sur la gestion des risques au sein d'une organisation. Élaborez une stratégie complète de gestion des risques qui intègre l'IA pour identifier et atténuer de manière proactive les risques éthiques, de jugement IA, de confidentialité des données et de mise en œuvre dans les opérations, les finances et l'environnement de marché plus large. Votre plan doit intégrer des outils d'IA pour la détection des risques et la modélisation de scénarios. Évaluez la probabilité et l'impact de chaque risque identifié, proposez des stratégies pour les atténuer et tirez parti de l'IA pour des mises à jour en temps réel. La stratégie doit inclure des plans d'urgence pour les défis imprévus, avec un mécanisme de révision assurant des ajustements réguliers du cadre de gestion des risques. Assurez-vous que l'approche correspond à la fois à vos objectifs de carrière personnels et aux objectifs de l'organisation. Veuillez fournir une liste de questions auxquelles je dois répondre pour fournir le contexte nécessaire à l'élaboration de la stratégie.`
+    },
+    {
+      id: "budget",
+      label: "Budgétisation",
+      shortDesc: "Optimisez l'allocation budgétaire pour la croissance de l'équipe/département.",
+      promptText: `Agissez en tant que conseiller financier. Élaborez une stratégie complète d'allocation budgétaire pour une équipe ou un département de votre organisation pour le prochain exercice fiscal. Analysez les données financières passées, les tendances économiques actuelles et les éventuelles dépenses futures. Prenez en compte les priorités organisationnelles, les objectifs de l'équipe, les perspectives de croissance et l'appétit pour le risque. L'allocation doit être optimisée pour améliorer à la fois la productivité personnelle et les résultats organisationnels. Fournissez des recommandations détaillées sur les domaines d'investissement, d'épargne et les éventuelles réductions nécessaires. Veuillez fournir une liste de questions auxquelles je dois répondre pour vous donner suffisamment de contexte avant de répondre.`
+    },
+    {
+      id: "productideas",
+      label: "Idées de solutions",
+      shortDesc: "Solutions innovantes basées sur des besoins contextuels.",
+      promptText: `Agissez en tant que stratège en innovation et consultant en solutions IA. Aidez-moi à générer des idées de solutions pratiques et à fort impact pour [organisation, entreprise, secteur, communauté ou domaine problématique]. Commencez par comprendre le défi actuel, les personnes concernées, les approches existantes, les ressources disponibles et les résultats souhaités. Sur la base de ce contexte, proposez 8 à 10 idées de solutions innovantes et viables qui pourraient impliquer de nouveaux produits, services, flux de travail, outils internes, expériences numériques, assistants IA, améliorations de processus, initiatives éducatives, programmes de durabilité ou solutions axées sur la communauté. Veuillez fournir une liste de questions auxquelles je dois répondre pour vous donner suffisamment de contexte avant de répondre.`
+    },
+    {
+      id: "marketgaps",
+      label: "Analyse des opportunités",
+      shortDesc: "Identifiez les besoins non satisfaits, les améliorations de processus, les tendances émergentes et les opportunités de création de valeur par une analyse basée sur les données.",
+      promptText: `Agissez en tant que consultant en stratégie et innovation. Analysez [organisation, entreprise, secteur ou communauté] pour identifier les opportunités d'amélioration et de croissance. Tenez compte des défis actuels, des besoins des utilisateurs ou clients, des tendances émergentes, des processus existants et des ressources disponibles. Identifiez les opportunités d'amélioration des produits, services, flux de travail, expériences client, efficacité opérationnelle ou adoption de l'IA. Pour chaque opportunité, expliquez le problème qu'elle résout, la valeur qu'elle pourrait créer, les personnes qui en bénéficieraient et les éventuels défis de mise en œuvre. Recommandez les opportunités les plus prometteuses, en les priorisant en fonction de leur impact potentiel et de leur faisabilité. Assurez-vous que vos recommandations sont pratiques, fondées sur des preuves et alignées sur les objectifs de l'organisation. Veuillez fournir une liste de questions auxquelles je dois répondre pour vous donner suffisamment de contexte avant de répondre.`
+    },
+    {
+      id: "growth",
+      label: "Opportunités de croissance",
+      shortDesc: "Débloquez la croissance personnelle et de l'entreprise grâce à l'analyse IA.",
+      promptText: `Agissez en tant qu'expert en croissance spécialisé dans les solutions innovantes au sein d'organisations établies. Analysez le statut actuel, les opérations et le positionnement sur le marché du rôle de l'employé au sein de l'entreprise. Identifiez les opportunités de croissance potentielles, les segments non exploités et les domaines d'amélioration tant personnelle que de l'entreprise. Fournissez des stratégies concrètes pour exploiter ces opportunités, en vous concentrant sur l'amélioration de la productivité, le développement de l'expertise personnelle et le soutien à la croissance globale de l'entreprise. Assurez-vous que les recommandations sont pratiques, rentables et directement liées à l'impact de l'employé sur les objectifs de l'organisation. Présentez les résultats de manière claire et organisée avec des étapes concrètes pour le développement personnel et organisationnel. Veuillez fournir une liste de questions auxquelles je dois répondre pour vous donner suffisamment de contexte avant de répondre.`
+    },
+    {
+      id: "decision",
+      label: "Prise de décision",
+      shortDesc: "Comparez les options, évaluez les compromis et recommandez des décisions éclairées.",
+      promptText: `Agissez en tant que conseiller en prise de décision stratégique. Aidez-moi à évaluer une décision professionnelle impliquant [décision ou défi]. Identifiez les options disponibles, comparez leurs avantages, inconvénients, risques, coûts et implications à long terme. Recommandez un cadre de prise de décision structuré qui intègre les preuves disponibles tout en reconnaissant l'incertitude. Avant de fournir des recommandations, posez des questions pour bien comprendre la situation, les priorités, les contraintes, les parties prenantes et les résultats souhaités. Veuillez fournir une liste de questions auxquelles je dois répondre pour vous donner suffisamment de contexte avant de répondre.`
+    },
+    {
+      id: "leadership",
+      label: "Leadership et changement",
+      shortDesc: "Menez l'adoption de l'IA, l'innovation et le changement organisationnel de manière responsable.",
+      promptText: `Agissez en tant que consultant expérimenté en leadership organisationnel. Aidez-moi à développer une stratégie pour mener une initiative basée sur l'IA au sein de [organisation/équipe/projet]. Recommandez comment communiquer la vision, engager les parties prenantes, gérer la résistance, gérer les risques, soutenir l'adoption, mesurer le succès et assurer une mise en œuvre éthique. Suggérez des comportements de leadership qui renforcent la confiance, encouragent la collaboration et aident les équipes à s'adapter au changement. Avant de faire des recommandations, posez des questions pour comprendre l'organisation, les objectifs, les parties prenantes, les ressources disponibles et les défis potentiels. Veuillez fournir une liste de questions auxquelles je dois répondre pour vous donner suffisamment de contexte avant de répondre.`
+    }
+  ];
+
+  const panelEl = document.getElementById('dynamicPanel');
+  let currentActiveId = sections[0].id;
+
+  function generateSectionHTML(section) {
+    const formattedPrompt = formatPlaceholders(section.promptText);
+    return `
+      <div class="text-segment">
+        <span class="badge-icon">✦ ${section.label}</span>
+        <p>${section.shortDesc}</p>
+        <div class="callout">
+          <div class="callout-content">
+            <h>Prompt</h>
+            <p id="prompt-${section.id}-text">${formattedPrompt}</p>
+          </div>
+        </div>
+        <hr />
+        <div class="footer-tip">
+          <span><em>Astuce :</em> copiez le prompt, remplacez les espaces réservés, et posez-le à vos modèles d'IA préférés pour des questions complémentaires.</span>
+          <span><b>Conçu au Frontier Institute of Technology</b></span>
+        </div>
+      </div>
+    `;
+  }
+
+  function animatePanelChange(newHtmlContent) {
+    if (!panelEl) return;
+    panelEl.style.opacity = '0';
+    panelEl.style.transform = 'translateY(8px)';
+    setTimeout(() => {
+      panelEl.innerHTML = newHtmlContent;
+      panelEl.offsetHeight;
+      panelEl.style.opacity = '1';
+      panelEl.style.transform = 'translateY(0px)';
+    }, 180);
+  }
+
+  function renderSection(sectionId) {
+    const section = sections.find(s => s.id === sectionId);
+    if (!section) return;
+    currentActiveId = sectionId;
+    const wrapper = generateSectionHTML(section);
+    animatePanelChange(wrapper);
+    updateActiveTab(sectionId);
+  }
+
+  function updateActiveTab(activeId) {
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      if (btn.dataset.id === activeId) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+  }
+
+  function buildTabs() {
+    const nav = document.getElementById('tabsNav');
+    nav.innerHTML = '';
+    sections.forEach(section => {
+      const btn = document.createElement('button');
+      btn.className = 'tab-btn';
+      if (section.id === currentActiveId) btn.classList.add('active');
+      btn.dataset.id = section.id;
+      btn.textContent = section.label;
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (currentActiveId === section.id) return;
+        renderSection(section.id);
+      });
+      nav.appendChild(btn);
+    });
+  }
+
+  buildTabs();
+  renderSection('mission');
+</script>
+</body>
+</html>
